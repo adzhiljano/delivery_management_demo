@@ -1,0 +1,7 @@
+﻿bin/*
+bin/**/*
+
+obj/*
+obj/**/*
+
+wwwroot/

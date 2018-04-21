@@ -1,0 +1,1 @@
+@sqlcmd -S . -v dbName="DeliveryManagement" -i "CreateAll.sql"

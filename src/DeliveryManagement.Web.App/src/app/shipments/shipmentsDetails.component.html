@@ -1,0 +1,158 @@
+<div *ngIf="mobileLayout">
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <button (click)="onBack.emit(true)" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon glyphicon-arrow-left"></span>
+                <span>Back</span>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <label class="control-label">
+                <span>Receiver name</span>
+            </label>
+            <input [(ngModel)]="shipment.receiverName" type="text" class="form-control input-xs" disabled>
+        </div>
+        <div class="form-group col-sm-8">
+            <label class="control-label">
+                <span>Receiver address</span>
+            </label>
+            <input [(ngModel)]="shipment.receiverAddress" type="text" class="form-control input-xs" disabled>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <label class="control-label">
+                <span>Package count</span>
+            </label>
+            <input [(ngModel)]="shipment.packagesCount" type="text" class="form-control input-xs" disabled>
+        </div>
+    </div>
+</div>
+
+<div class="row" [ngBusy]="busy">
+    <div class="form-group col-sm-6">
+        <label class="control-label">
+            <span>Sender name</span>
+        </label>
+        <input [(ngModel)]="shipment.senderName" type="text" class="form-control input-xs" disabled>
+    </div>
+    <div class="form-group col-sm-6">
+        <label class="control-label">
+            <span>Sender address</span>
+        </label>
+        <input [(ngModel)]="shipment.senderAddress" type="text" class="form-control input-xs" disabled>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group col-sm-4">
+        <label class="control-label">
+            <span>Status</span>
+        </label>
+        <input [(ngModel)]="shipment.status" type="text" class="form-control input-xs" disabled>
+    </div>
+    <div class="form-group col-sm-8">
+        <label class="control-label">
+            <span>Tracking number</span>
+        </label>
+        <input [(ngModel)]="shipment.trackingNumber" type="text" class="form-control input-xs" disabled>
+    </div>
+</div>
+
+<div *ngIf="shipment.status !== shipmentStatuses.OutForDelivery">
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <label class="control-label">
+                <span>Damaged packages</span>
+            </label>
+            <input [value]="shipment.hasDamagedPackages | boolText" type="text" class="form-control input-xs" disabled>
+        </div>
+        <div class="form-group col-sm-4">
+            <label class="control-label">
+                <span>Receiver found</span>
+            </label>
+            <input [value]="shipment.receiverFound | boolText" type="text" class="form-control input-xs" disabled>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-8">
+            <label class="control-label">
+                <span>Notes</span>
+            </label>
+            <textarea rows="2" [(ngModel)]="shipment.notes" class="form-control input-xs" disabled></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="shipment.status === shipmentStatuses.OutForDelivery">
+    <div class="form-group col-sm-4">
+        <button (click)="mode = 'Delivered'" type="button" *ngIf="!mode" class="btn btn-success btn-xs">
+            <span>Deliver</span>
+        </button>
+        <button (click)="mode = 'HeldInTruck'" type="button" *ngIf="!mode" class="btn btn-default btn-xs">
+            <span>Hold</span>
+        </button>
+        <button (click)="save()" type="button" *ngIf="mode" [disabled]="!shipmentForm.form.valid" class="btn btn-primary btn-xs">
+            <span>Save</span>
+        </button>
+        <button (click)="mode = null" type="button" *ngIf="mode" class="btn btn-default btn-xs">
+            <span>Cancel</span>
+        </button>
+    </div>
+</div>
+
+<form #shipmentForm="ngForm">
+    <div *ngIf="mode">
+        <div class="row">
+            <div class="form-group col-sm-4">
+                <label class="control-label">
+                    <span>Damaged packages</span>
+                </label>
+                <select [(ngModel)]="shipment.hasDamagedPackages" [required]="mode === 'Delivered'" class="form-control input-sm" style="height: 25px;"
+                    #hasDamagedPackages="ngModel" name="hasDamagedPackages">
+                    <option [ngValue]="null"></option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+                <div [hidden]="hasDamagedPackages.valid" class="alert alert-danger">
+                    Damaged packages is required
+                </div>
+            </div>
+            <div class="form-group col-sm-4">
+                <label class="control-label">
+                    <span>Receiver found</span>
+                </label>
+                <select [(ngModel)]="shipment.receiverFound" [required]="mode === 'Delivered'" class="form-control input-sm" style="height: 25px;"
+                    #receiverFound="ngModel" name="receiverFound">
+                    <option [ngValue]="null"></option>
+                    <option [ngValue]="true">Yes</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+                <div [hidden]="receiverFound.valid" class="alert alert-danger">
+                    Receiver found is required
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-8">
+                <label class="control-label">
+                    <span>Notes</span>
+                </label>
+                <textarea rows="2" [(ngModel)]="shipment.notes" class="form-control input-xs" [required]="mode === 'HeldInTruck'" #notes="ngModel"
+                    name="notes"></textarea>
+                <div [hidden]="notes.valid" class="alert alert-danger">
+                    Notes is required
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row" *ngIf="shipment.status !== shipmentStatuses.OutForDelivery">
+    <div class="form-group col-sm-4">
+        <button (click)="undo()" type="button" class="btn btn-primary btn-xs">
+            <span>Undo</span>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="panel panel-default">
+    <div class="panel-body" [ngBusy]="busy">
+        <div *ngIf="!shipment">
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label class="control-label">
+                            <span>Status</span>
+                        </label>
+                        <select [(ngModel)]="statusFilter" class="form-control input-sm">
+                            <option [value]="null">All</option>
+                            <option *ngFor="let status of shipmentStatuses" [value]="status">{{status}}</option>
+                        </select>
+                    </div>
+
+                    <div class="labeless form-group col-sm-4 pull-right">
+                        <a (click)="filterShipments()" type="button" class="btn btn-default btn-sm pull-right">
+                            <span>Filter</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" style="max-height: 400px; overflow: auto">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a (click)="toggleAll(!toggleAllIndicator)" type="button" class="btn btn-primary btn-xs" *ngIf="!mobileLayout">
+                                    <span class="glyphicon" [ngClass]="{'glyphicon-resize-full': !toggleAllIndicator, 'glyphicon-resize-small': toggleAllIndicator}"></span>
+                                </a>
+                            </th>
+                            <th>Receiver name</th>
+                            <th>Receiver address</th>
+                            <th>Package count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-template ngFor let-shipment [ngForOf]="shipments?.results" let-i="index">
+                            <tr>
+                                <td class="buttons-cell">
+                                    <a (click)="viewShipment(shipment)" type="button" class="btn btn-primary btn-xs">
+                                        <span class="glyphicon" [ngClass]="{'glyphicon-resize-full': (!shipment.toggle && !mobileLayout), 'glyphicon-resize-small': (shipment.toggle && !mobileLayout), 'glyphicon-share': mobileLayout}"></span>
+                                    </a>
+                                </td>
+                                <td>{{shipment.receiverName}}</td>
+                                <td>{{shipment.receiverAddress}}</td>
+                                <td>
+                                    <span class="badge">{{shipment.packagesCount}}</span>
+                                </td>
+                            </tr>
+                            <tr *ngIf="shipment.toggle">
+                                <td></td>
+                                <td colspan="3">
+                                    <dm-shipmentsDetails [shipment]="shipment" (shipmentUpdated)="shipmentUpdated($event)"></dm-shipmentsDetails>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination pull-right" style="margin: 2px 0px 2px 2px;" *ngIf="shipments && shipments.count > pageLimit">
+                <li *ngFor="let page of pages" [ngClass]="{'active': page === currentPage}" style="cursor: pointer">
+                    <a (click)="setPage(page)">{{page}}</a>
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="shipment">
+            <dm-shipmentsDetails [shipment]="shipment" [mobileLayout]="mobileLayout" (onBack)="shipment = null" (shipmentUpdated)="shipmentUpdated($event)"></dm-shipmentsDetails>
+        </div>
+    </div>
+</div>

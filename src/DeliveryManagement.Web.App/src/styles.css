@@ -1,0 +1,44 @@
+body {
+  font-family: "Roboto";
+  font-weight: 400;
+  margin: 0px;
+  padding: 0px;
+  font-size: 13px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  overflow-y: scroll;
+  min-width: 320px;
+}
+
+/* TABLE */
+table.table thead th {
+  background-color: #f5f5f5;
+}
+table td.buttons-cell
+{
+  white-space: nowrap;
+  padding: 4px;
+  width: 20px;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+  padding: 5px;
+}
+
+.input-xs {
+  height: 20px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+div.labeless
+{
+  padding-top: 23px;
+}
+
+.alert
+{
+  padding: 3px;
+  margin-bottom: 0px;
+}
