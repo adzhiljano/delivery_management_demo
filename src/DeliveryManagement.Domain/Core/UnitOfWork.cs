@@ -23,7 +23,8 @@ namespace DeliveryManagement.Domain.Core
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach(var modelConfiguration in modelConfigurations) {
+            foreach (var modelConfiguration in modelConfigurations)
+            {
                 modelConfiguration.AddEntityTypeModel(modelBuilder);
             }
         }
@@ -34,7 +35,7 @@ namespace DeliveryManagement.Domain.Core
             {
                 this.SaveChanges();
             }
-            catch(DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException)
             {
                 throw new Exception("Entity already modified");
             }
